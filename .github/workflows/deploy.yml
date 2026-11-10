@@ -27,10 +27,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # ドメイン切り替え前は仮URL（https://vv-tokyo.github.io/corporate-site/）で表示する。
-          # vv-tokyo.com に切り替えたら、SITE_URL を https://vv-tokyo.com、BASE_PATH を / にする。
-          SITE_URL: https://vv-tokyo.github.io
-          BASE_PATH: /corporate-site
+          # 公開先の住所（2026-11-11 に vv-tokyo.com へ切り替え）
+          SITE_URL: https://vv-tokyo.com
+          BASE_PATH: /
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

@@ -1,0 +1,156 @@
+---
+import { company, nav } from '../content/site';
+
+interface Props {
+  /** トップページ以外では、メニューのリンク先をトップページのセクションにする */
+  home?: boolean;
+}
+const { home = true } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const top = `${base}/`;
+const href = (id: string) => (home ? `#${id}` : `${top}#${id}`);
+---
+
+<header class="header" data-header>
+  <a class="brand" href={top}>{company.headerName}</a>
+
+  <button class="toggle" type="button" aria-expanded="false" aria-controls="site-menu" data-toggle>
+    <span class="sr">メニューを開く</span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+
+  <nav class="menu" id="site-menu" aria-label="メインメニュー" data-menu>
+    <ul>
+      {nav.map((item) => (
+        <li><a href={href(item.id)}>{item.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    height: var(--header-h);
+    padding: 0 var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.4s, border-color 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  .header.is-scrolled {
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom-color: var(--line);
+  }
+  .brand {
+    font-size: 15px;
+    letter-spacing: 0.16em;
+    position: relative;
+    z-index: 2;
+  }
+  .menu ul {
+    display: flex;
+    gap: clamp(20px, 3vw, 40px);
+  }
+  .menu a {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--text-sub);
+    transition: color 0.3s;
+  }
+  .menu a:hover {
+    color: var(--text);
+  }
+  .toggle {
+    display: none;
+  }
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  @media (max-width: 860px) {
+    .toggle {
+      display: block;
+      position: relative;
+      z-index: 2;
+      width: 44px;
+      height: 44px;
+      margin-right: -10px;
+      background: none;
+      border: 0;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .bar {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      height: 1px;
+      background: currentColor;
+      transition: transform 0.3s;
+    }
+    .bar:nth-of-type(1) { top: 18px; }
+    .bar:nth-of-type(2) { top: 26px; }
+    .header.is-open .bar:nth-of-type(1) { transform: translateY(4px) rotate(45deg); }
+    .header.is-open .bar:nth-of-type(2) { transform: translateY(-4px) rotate(-45deg); }
+
+    .menu {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--gutter);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .header.is-open .menu {
+      opacity: 1;
+      visibility: visible;
+    }
+    .menu ul {
+      flex-direction: column;
+      gap: 28px;
+    }
+    .menu a {
+      font-size: 22px;
+      color: var(--text);
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  if (header && toggle && menu) {
+    const label = toggle.querySelector('.sr');
+    const setOpen = (open: boolean) => {
+      header.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      if (label) label.textContent = open ? 'メニューを閉じる' : 'メニューを開く';
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+    toggle.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

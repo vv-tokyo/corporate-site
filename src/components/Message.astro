@@ -1,0 +1,50 @@
+---
+import { message } from '../content/site';
+---
+
+<section class="section section--sub" id="message">
+  <div class="inner">
+    <span class="eyebrow">Message ／ 代表メッセージ</span>
+    <blockquote>
+      <p class="en">{message.en}</p>
+      <p class="ja">{message.ja}</p>
+    </blockquote>
+    <p class="sign">
+      <span class="title">{message.title}</span>
+      <span class="name">{message.name}</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  blockquote {
+    margin: 0;
+  }
+  .en {
+    font-weight: 300;
+    font-size: clamp(28px, 4.4vw, 60px);
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    max-width: 20em;
+  }
+  .ja {
+    margin-top: clamp(32px, 5vh, 48px);
+    font-size: clamp(16px, 1.8vw, 22px);
+    letter-spacing: 0.1em;
+  }
+  .sign {
+    margin-top: clamp(56px, 10vh, 96px);
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .title {
+    font-size: 13px;
+    color: var(--text-sub);
+    letter-spacing: 0.2em;
+  }
+  .name {
+    font-size: 20px;
+    letter-spacing: 0.2em;
+  }
+</style>

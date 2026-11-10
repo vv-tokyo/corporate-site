@@ -1,0 +1,29 @@
+---
+import { contact, company } from '../content/site';
+---
+
+<section class="section" id="contact">
+  <div class="inner">
+    <span class="eyebrow">Contact ／ お問い合わせ</span>
+    <p class="lead">{contact.lead}</p>
+    <p class="mail">{company.email}</p>
+    <a class="button" href={`mailto:${company.email}`}>
+      {contact.button}
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .lead {
+    font-size: clamp(15px, 1.4vw, 18px);
+  }
+  .mail {
+    margin: clamp(24px, 4vh, 40px) 0 clamp(40px, 7vh, 64px);
+    font-weight: 300;
+    font-size: clamp(28px, 6vw, 80px);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    word-break: break-all;
+  }
+</style>

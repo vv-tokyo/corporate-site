@@ -1,0 +1,49 @@
+---
+import { profile } from '../content/site';
+---
+
+<section class="section section--sub" id="company">
+  <div class="inner">
+    <span class="eyebrow">Company ／ 会社概要</span>
+    <dl class="table">
+      {profile.map((row) => (
+        <div>
+          <dt>{row.label}</dt>
+          <dd>{row.email ? <a href={`mailto:${row.value}`}>{row.value}</a> : row.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .table {
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .table div {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  dt {
+    font-size: 13px;
+    color: var(--text-sub);
+    letter-spacing: 0.2em;
+  }
+  dd {
+    font-size: 15px;
+  }
+  dd a {
+    border-bottom: 1px solid var(--text-sub);
+  }
+  @media (max-width: 720px) {
+    .table div {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding: 22px 0;
+    }
+  }
+</style>

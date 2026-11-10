@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+_old-sample/
+
+# 社内用の作業メモ（公開しない）
+CLAUDE.md
+.claude/
+
+# 秘密情報を含みうるファイル
+.env
+.env.*
+*.pem
+*.key

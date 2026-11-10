@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title="ページが見つかりません" noindex>
+  <main class="nf">
+    <p class="code">404</p>
+    <p class="msg">お探しのページは見つかりませんでした。</p>
+    <a class="button" href={`${base}/`}>トップへ戻る</a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 0 var(--gutter);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .code {
+    font-weight: 300;
+    font-size: clamp(96px, 20vw, 240px);
+    line-height: 1;
+  }
+  .msg {
+    margin: 24px 0 48px;
+  }
+</style>

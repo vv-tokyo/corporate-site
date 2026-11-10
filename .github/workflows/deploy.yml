@@ -1,0 +1,46 @@
+# main に push されると、サイトを組み立てて GitHub Pages に公開する
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          # ドメイン切り替え前は仮URL（https://vv-tokyo.github.io/corporate-site/）で表示する。
+          # vv-tokyo.com に切り替えたら、SITE_URL を https://vv-tokyo.com、BASE_PATH を / にする。
+          SITE_URL: https://vv-tokyo.github.io
+          BASE_PATH: /corporate-site
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

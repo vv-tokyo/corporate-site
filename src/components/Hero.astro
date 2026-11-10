@@ -1,0 +1,104 @@
+---
+import { hero } from '../content/site';
+import HeroBackground from './HeroBackground.astro';
+
+// 写真に差し替えるときは、ここにファイル名を入れる（例: '/hero.jpg'）
+const backgroundImage: string | undefined = undefined;
+---
+
+<section class="hero" id="top">
+  <HeroBackground image={backgroundImage} />
+
+  <div class="copy">
+    <h1 class="a">
+      {hero.messageA.split('. ').map((part, i, all) => (
+        <>{i > 0 && ' '}<span>{i < all.length - 1 ? `${part}.` : part}</span></>
+      ))}
+    </h1>
+    <p class="sub">
+      {hero.sub.map((line) => (
+        <span>{line}</span>
+      ))}
+    </p>
+  </div>
+
+  <!-- メッセージB：画面からはみ出す大きさで、横にゆっくり流す -->
+  <div class="marquee">
+    <p class="sr">{hero.messageB}</p>
+    <div class="track" aria-hidden="true">
+      {[0, 1].map(() => (
+        <span class="b">{hero.messageB}</span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 600px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .copy {
+    position: relative;
+    z-index: 1;
+    padding: calc(var(--header-h) + clamp(40px, 10vh, 120px)) var(--gutter) 0;
+  }
+  .a {
+    font-weight: 400;
+    font-size: clamp(30px, 4.6vw, 64px);
+    line-height: 1.25;
+    letter-spacing: 0.08em;
+  }
+  .a span {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .sub {
+    margin-top: clamp(20px, 3.5vh, 36px);
+    font-size: clamp(13px, 1.15vw, 16px);
+    line-height: 2.1;
+    letter-spacing: 0.1em;
+  }
+  .sub span {
+    display: block;
+  }
+
+  .marquee {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding-bottom: clamp(8px, 2vh, 24px);
+  }
+  .track {
+    display: flex;
+    width: max-content;
+    animation: flow 35s linear infinite;
+  }
+  .b {
+    flex: none;
+    padding-right: 0.6em;
+    font-weight: 300;
+    font-size: clamp(96px, 17vw, 300px);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  @keyframes flow {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+</style>

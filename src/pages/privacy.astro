@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { privacy, company } from '../content/site';
+---
+
+<Base title={privacy.title}>
+  <Header home={false} />
+  <main class="page">
+    <div class="inner">
+      <span class="eyebrow">Privacy Policy</span>
+      <h1>{privacy.title}</h1>
+      <p class="intro">{privacy.intro}</p>
+      {privacy.sections.map((s) => (
+        <section>
+          <h2>{s.heading}</h2>
+          <p>{s.body}</p>
+        </section>
+      ))}
+      <section>
+        <h2>{privacy.contactHeading}</h2>
+        <p>
+          {company.nameJa}<br />
+          {company.address}<br />
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </p>
+      </section>
+      <p class="date">{privacy.established}</p>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .page {
+    padding: calc(var(--header-h) + clamp(64px, 12vh, 120px)) var(--gutter) clamp(96px, 14vh, 160px);
+  }
+  .inner {
+    max-width: 760px;
+  }
+  h1 {
+    font-weight: 400;
+    font-size: clamp(30px, 4vw, 48px);
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+  }
+  .intro {
+    margin-top: 40px;
+  }
+  section {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  h2 {
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  section p {
+    color: var(--text-sub);
+  }
+  section a {
+    color: var(--text);
+    border-bottom: 1px solid var(--text-sub);
+  }
+  .date {
+    margin-top: 64px;
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+</style>

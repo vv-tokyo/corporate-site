@@ -1,0 +1,209 @@
+---
+import { revenueDrive as rd } from '../content/site';
+---
+
+<section class="section rd" id="revenue-drive">
+  <div class="inner">
+    <span class="eyebrow">{rd.label}</span>
+
+    <!-- 名前と説明 -->
+    <div class="head">
+      <h2 class="name">{rd.name}</h2>
+      <div class="intro">
+        <p class="tagline">{rd.tagline}</p>
+        <p class="concept">
+          {rd.concept.map((line) => (
+            <span>{line}</span>
+          ))}
+        </p>
+      </div>
+    </div>
+
+    <!-- 仕組み：Marketing → Sales → 売上 -->
+    <ol class="flow">
+      {rd.services.map((s) => (
+        <li class="step">
+          <h3>{s.en}</h3>
+          <p class="role">{s.role}</p>
+          <p class="items">{s.items.join(' ／ ')}</p>
+        </li>
+      ))}
+      <li class="step result">
+        <h3>{rd.growth.title}</h3>
+        <p class="formula">
+          {rd.growth.terms.map((t, i) => (
+            <>
+              {i > 0 && <span class="x" aria-label="かける">×</span>}
+              <span>{t}</span>
+            </>
+          ))}
+        </p>
+      </li>
+    </ol>
+
+    <!-- 提供価値 -->
+    <div class="value">
+      <p class="lead">{rd.value.lead}</p>
+      <dl class="values">
+        {rd.value.items.map((v) => (
+          <div>
+            <dt>{v.en}</dt>
+            <dd>{v.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <p class="closing">
+      {rd.closing.map((line) => (
+        <span>{line}</span>
+      ))}
+    </p>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: grid;
+    gap: clamp(20px, 3vh, 32px);
+  }
+  .tagline,
+  .concept {
+    text-wrap: pretty;
+  }
+  .name {
+    font-weight: 400;
+    font-size: clamp(48px, 8vw, 120px);
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+  .tagline {
+    font-size: clamp(16px, 1.6vw, 20px);
+    letter-spacing: 0.08em;
+    line-height: 1.7;
+  }
+  .concept {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--text-sub);
+  }
+  .concept span,
+  .closing span {
+    display: inline-block;
+  }
+
+  /* 仕組みの図 */
+  .flow {
+    list-style: none;
+    margin: clamp(48px, 8vh, 80px) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.3fr;
+    border: 1px solid var(--line);
+  }
+  .step {
+    position: relative;
+    padding: clamp(24px, 3vw, 40px);
+  }
+  .step + .step {
+    border-left: 1px solid var(--line);
+  }
+  /* 次の段階への矢印 */
+  .step + .step::before {
+    content: '→';
+    position: absolute;
+    left: -0.6em;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.2em;
+    text-align: center;
+    background: var(--bg);
+    color: var(--text-sub);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .step h3 {
+    font-weight: 400;
+    font-size: clamp(24px, 2.6vw, 34px);
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+  }
+  .role {
+    margin-top: 10px;
+    font-size: 15px;
+  }
+  .items {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  .result {
+    background: var(--bg-sub);
+  }
+  .formula {
+    margin-top: 14px;
+    font-size: clamp(17px, 1.7vw, 22px);
+    letter-spacing: 0.06em;
+  }
+  .x {
+    margin: 0 0.4em;
+    color: var(--text-sub);
+  }
+
+  /* 提供価値 */
+  .value {
+    margin-top: clamp(48px, 8vh, 80px);
+  }
+  .lead {
+    font-size: clamp(20px, 2.4vw, 30px);
+    letter-spacing: 0.08em;
+  }
+  .values {
+    margin: 24px 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 3vw, 40px);
+  }
+  .values div {
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .values dt {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--text-sub);
+  }
+  .values dd {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .closing {
+    margin-top: clamp(48px, 8vh, 80px);
+    font-size: clamp(16px, 1.8vw, 22px);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 860px) {
+    .flow {
+      grid-template-columns: 1fr;
+    }
+    .step + .step {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+    .step + .step::before {
+      content: '↓';
+      left: 50%;
+      top: -0.8em;
+      transform: translateX(-50%);
+    }
+    .values {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .values div {
+      padding: 16px 0;
+    }
+  }
+</style>

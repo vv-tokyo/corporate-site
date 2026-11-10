@@ -1,0 +1,127 @@
+---
+// ヒーローの背景。黒いシルクのような曲線をコードで描き、ゆっくり動かす。
+// 写真に差し替えるときは、public/ に画像を置き、Hero.astro の backgroundImage に
+// そのファイル名（例: '/hero.jpg'）を入れる。
+interface Props {
+  image?: string;
+}
+const { image } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// 曲線1本ごとに、形・銀色の光の向き・太さ・ぼかし・動きを決める
+const layers = [
+  {
+    d: 'M-200 820 C 200 560, 520 980, 900 700 S 1500 380, 1800 560 L 1800 1200 L -200 1200 Z',
+    fill: true, width: 0, blur: 40, opacity: 0.7, anim: 'a',
+    g: [1500, 200, 100, 1100], peak: '#8e8e92',
+  },
+  {
+    d: 'M-200 380 C 160 180, 520 620, 860 460 S 1420 140, 1800 300',
+    fill: false, width: 190, blur: 18, opacity: 0.85, anim: 'b',
+    g: [200, 0, 1400, 1000], peak: '#d6d6d8',
+  },
+  {
+    d: 'M-200 640 C 240 420, 620 820, 1000 600 S 1500 420, 1800 680',
+    fill: false, width: 120, blur: 16, opacity: 0.7, anim: 'c',
+    g: [100, 1000, 1500, 0], peak: '#f2f2f4',
+  },
+  {
+    d: 'M-200 520 C 220 330, 560 740, 940 540 S 1460 280, 1800 460',
+    fill: false, width: 2.5, blur: 0, opacity: 0.5, anim: 'b',
+    g: [100, 1000, 1500, 0], peak: '#f2f2f4',
+  },
+];
+---
+
+{image ? (
+  <div class="bg">
+    <img class="photo" src={`${base}${image}`} alt="" />
+    <div class="shade"></div>
+  </div>
+) : (
+  <div class="bg" aria-hidden="true">
+    {layers.map((l, i) => (
+      <svg
+        class={`layer anim-${l.anim}`}
+        style={l.blur ? `filter: blur(${l.blur}px)` : undefined}
+        viewBox="0 0 1600 1000"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <linearGradient
+            id={`sheen-${i}`}
+            gradientUnits="userSpaceOnUse"
+            x1={l.g[0]} y1={l.g[1]} x2={l.g[2]} y2={l.g[3]}
+          >
+            <stop offset="0" stop-color="#000" />
+            <stop offset="0.4" stop-color="#141416" />
+            <stop offset="0.5" stop-color={l.peak} />
+            <stop offset="0.58" stop-color="#232326" />
+            <stop offset="1" stop-color="#000" />
+          </linearGradient>
+        </defs>
+        {l.fill ? (
+          <path d={l.d} fill={`url(#sheen-${i})`} opacity={l.opacity} />
+        ) : (
+          <path
+            d={l.d}
+            fill="none"
+            stroke={`url(#sheen-${i})`}
+            stroke-width={l.width}
+            stroke-linecap="round"
+            opacity={l.opacity}
+          />
+        )}
+      </svg>
+    ))}
+    <div class="vignette"></div>
+    <div class="shade"></div>
+  </div>
+)}
+
+<style>
+  .bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #000;
+  }
+  .layer,
+  .photo {
+    position: absolute;
+    inset: -8%;
+    width: 116%;
+    height: 116%;
+    object-fit: cover;
+  }
+  .anim-a { animation: drift-a 38s ease-in-out infinite alternate; }
+  .anim-b { animation: drift-b 30s ease-in-out infinite alternate; }
+  .anim-c { animation: drift-c 44s ease-in-out infinite alternate; }
+
+  @keyframes drift-a {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-3%, -2%) scale(1.05); }
+  }
+  @keyframes drift-b {
+    from { transform: translate(-2%, 1%) rotate(-1.5deg); }
+    to   { transform: translate(2.5%, -1.5%) rotate(1.5deg); }
+  }
+  @keyframes drift-c {
+    from { transform: translate(2%, 1.5%) rotate(1deg); }
+    to   { transform: translate(-2.5%, -1%) rotate(-2deg); }
+  }
+
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.9) 100%);
+  }
+  /* 文字を読みやすくするための薄い影 */
+  .shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 40%);
+  }
+</style>
